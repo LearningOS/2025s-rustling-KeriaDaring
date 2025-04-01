@@ -67,15 +67,28 @@ impl<T> myStack<T> {
         }
     }
     pub fn push(&mut self, elem: T) {
-        //TODO
+        match self.is_empty() {
+            true => {
+                self.q1.enqueue(elem);
+            },
+            false => {
+                
+            }
+        }
     }
     pub fn pop(&mut self) -> Result<T, &str> {
-        //TODO
-		Err("Stack is empty")
+        match self.q1.dequeue() {
+            Err(_) => {
+                Err("Stack is empty")
+            },
+            Ok(value) => {
+                
+                Ok(value)
+            }
+        }
     }
     pub fn is_empty(&self) -> bool {
-		//TODO
-        true
+		self.q1.is_empty() && self.q2.is_empty()
     }
 }
 

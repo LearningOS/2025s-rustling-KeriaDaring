@@ -3,9 +3,9 @@
 	This problem requires you to implement a basic DFS traversal
 */
 
-// I AM NOT DONE
-use std::collections::HashSet;
 
+use std::collections::HashSet;
+use std::collections::VecDeque;
 struct Graph {
     adj: Vec<Vec<usize>>, 
 }
@@ -24,6 +24,22 @@ impl Graph {
 
     fn dfs_util(&self, v: usize, visited: &mut HashSet<usize>, visit_order: &mut Vec<usize>) {
         //TODO
+        let mut not_visit = VecDeque::new();
+        visit_order.push(v);
+        visited.insert(v);
+        not_visit.push_back(v);
+
+        while let Some(value) = not_visit.pop_front() {
+            for i in &self.adj[value] {
+                print!("{},", i);
+                if !visited.contains(i) {
+                    visited.insert(i.clone());
+                    visit_order.push(i.clone());
+                    not_visit.push_front(i.clone());
+                }
+            }
+        }
+        
     }
 
     // Perform a depth-first search on the graph, return the order of visited nodes

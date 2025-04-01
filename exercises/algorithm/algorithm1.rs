@@ -2,11 +2,13 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
+use std::clone::Clone;
+use std::cmp::PartialOrd;
 
 #[derive(Debug)]
 struct Node<T> {
@@ -14,7 +16,7 @@ struct Node<T> {
     next: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Node<T> {
+impl<T: Clone + PartialOrd> Node<T> {
     fn new(t: T) -> Node<T> {
         Node {
             val: t,
@@ -29,13 +31,13 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T: Clone + PartialOrd> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T: Clone + PartialOrd> LinkedList<T> {
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -69,14 +71,51 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self
 	{
-		//TODO
-		Self {
+        let mut index_1 = 0;
+        let mut index_2 = 0;
+        let mut result = Self {
             length: 0,
             start: None,
             end: None,
+        };
+        while !list_a.get(index_1).is_none() || !list_b.get(index_2).is_none() {    
+            if list_b.get(index_2).is_none() {
+                match list_a.get(index_1) {
+                    Some(value) => {
+                        result.add(value.clone());
+                        index_1 += 1;
+                    },
+                    _ => {}
+                }
+                
+                continue;
+            }
+            if list_a.get(index_1).is_none() {
+                match list_b.get(index_2) {
+                    Some(value) => {
+                        result.add(value.clone());
+                        index_2 += 1;
+                    },
+                    _ => {}
+                }
+                continue;
+            }
+            if let Some(val_1) = list_a.get(index_1) {
+                if let Some (val_2) = list_b.get(index_2) {
+                    if val_1 > val_2 {
+                        result.add(val_2.clone());
+                        index_2 += 1;
+                    } else {
+                        result.add(val_1.clone());
+                        index_1 += 1;
+                    }
+                }
+            }
         }
+		//TODO
+		result
 	}
 }
 
